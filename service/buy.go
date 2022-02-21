@@ -7,7 +7,7 @@ import (
 
 type BuyService interface {
 	GetAllBuys() ([]*models.BuyResponse, error)
-	CreateBuy() (*models.TransactionResponse, error)
+	CreateBuy(*models.Transaction) (*models.Transaction, error)
 }
 
 type buyService struct {
@@ -28,10 +28,10 @@ func (bs *buyService) GetAllBuys() ([]*models.BuyResponse, error) {
 	return list, nil
 }
 
-func (bs *buyService) CreateBuy() (*models.TransactionResponse, error) {
-	list, err := bs.buyRepo.CreateBuy()
+func (bs *buyService) CreateBuy(t *models.Transaction) (*models.Transaction, error) {
+	mt, err := bs.buyRepo.CreateBuy(t)
 	if err != nil {
 		return nil, err
 	}
-	return list, nil
+	return mt, nil
 }

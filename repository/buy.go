@@ -8,7 +8,7 @@ import (
 
 type BuyRepository interface {
 	GetAllBuys() ([]*models.BuyResponse, error)
-	CreateBuy() (*models.TransactionResponse, error)
+	CreateBuy(*models.Transaction) (*models.Transaction, error)
 }
 
 type buyRepository struct {
@@ -25,6 +25,13 @@ func (ur *buyRepository) GetAllBuys() ([]*models.BuyResponse, error) {
 	return nil, nil
 }
 
-func (ur *buyRepository) CreateBuy() (*models.TransactionResponse, error) {
-	return nil, nil
+func (ur *buyRepository) CreateBuy(t *models.Transaction) (*models.Transaction, error) {
+	query := ur.db.Debug()
+
+	err := query.Create(&t).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return t, nil
 }

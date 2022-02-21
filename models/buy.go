@@ -4,7 +4,26 @@ import (
 	"time"
 )
 
-// respon get /buy/
+type ResponseGet struct {
+	StatusCode int               `json:"statusCode"`
+	Message    string            `json:"message"`
+	Data       []ResponseGetData `json:"data"`
+}
+
+type ResponseGetSingle struct {
+	StatusCode int             `json:"statusCode"`
+	Message    string          `json:"message"`
+	Data       ResponseGetData `json:"data"`
+}
+
+type ResponseGetData struct {
+	ID          int     `json:"id"`
+	IdUser      int     `json:"id_user"`
+	ItemAmount  int     `json:"item_amount"`
+	PriceAmount float64 `json:"price_amount"`
+	CreatedAt   string  `json:"create_at"`
+}
+
 type BuyResponse struct {
 	ID          int     `json:"id"`
 	IdUser      int     `json:"id_user"`
@@ -13,7 +32,7 @@ type BuyResponse struct {
 	CreatedAt   string  `json:"created_at"`
 }
 
-type TransactionResponse struct {
+type Transaction struct {
 	ID        int       `json:"id"`
 	UserId    int       `json:"user_id"`
 	ItemId    int       `json:"item_id"`
@@ -22,16 +41,20 @@ type TransactionResponse struct {
 	Uuid      string    `json:"uuid"`
 }
 
-type BuyOrder struct {
-	ID        int         `json:"id"`
-	IdUser    int         `json:"id_user" validation:"required"`
-	ListOrder []ListOrder `json:"list_order"`
+type DataBuy struct {
+	IdUser      int     `json:"id_user"`
+	ItemAmount  int     `json:"item_amount"`
+	PriceAmount float64 `json:"price_amount"`
 }
 
-type ListOrder struct {
+type BuyDetail struct {
 	IdItem      int     `json:"id_item"`
-	ItemName    string  `json:"item_name"`
 	ItemPrice   float64 `json:"item_price"`
 	ItemAmount  int     `json:"item_amount"`
 	PriceAmount float64 `json:"price_amount"`
+}
+
+type CreateBuy struct {
+	DataBuy  DataBuy     `json:"data_buy"`
+	DataItem []BuyDetail `json:"data_item"`
 }
