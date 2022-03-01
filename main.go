@@ -55,7 +55,10 @@ func InitializeRoute(db *gorm.DB) http.Handler {
 
 	router.Route("/buy", func(router chi.Router) {
 		router.Get("/", uh.GetAllBuys)
-		router.Post("/", uh.CreateBuy)
+		// router.Post("/", uh.CreateBuy)
+		router.Route("/transactionx", func(r chi.Router) {
+			r.Post("/", uh.CreateTransaction)
+		})
 	})
 
 	return router

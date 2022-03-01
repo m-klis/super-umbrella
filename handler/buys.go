@@ -3,7 +3,6 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"gochicoba/helpers"
 	"gochicoba/models"
 	"gochicoba/service"
@@ -39,7 +38,6 @@ func (ih *BuyHandler) GetAllBuys(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal([]byte(body), &data)
 	// fmt.Println(data.Data)
 	helpers.CustomResponse(w, r, http.StatusOK, "success", data.Data)
-	return
 }
 
 func (ih *BuyHandler) CreateBuy(w http.ResponseWriter, r *http.Request) {
@@ -81,19 +79,30 @@ func (ih *BuyHandler) CreateBuy(w http.ResponseWriter, r *http.Request) {
 
 	ud := uuid.New().String()
 	var transaction = models.Transaction{
-		UserId: data.Data.IdUser,
-		ItemId: data.Data.ID,
-		Price:  data.Data.PriceAmount,
-		Uuid:   ud,
+		UserId:  data.Data.IdUser,
+		ItemId:  data.Data.ID,
+		Amount:  data.Data.PriceAmount,
+		Uuid:    ud,
+		ItemQty: data.Data.ItemAmount,
 	}
-
-	ide := uuid.New().String()
-	fmt.Println(ide)
 
 	ress, err := ih.buyService.CreateBuy(&transaction)
 	if err != nil {
 		helpers.ErrorResponse(w, r, http.StatusInternalServerError, "failed", err.Error())
 	}
 	helpers.CustomResponse(w, r, http.StatusOK, "success", ress)
-	return
+}
+
+func (ih *BuyHandler) CreateTransaction(w http.ResponseWriter, r *http.Request) {
+	var req, res *models.Transaction
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		helpers.ErrorResponse(w, r, http.StatusInternalServerError, "failed", err.Error())
+	}
+
+	res, err = ih.buyService.CreateTransaction(req)
+	if err != nil {
+		helpers.ErrorResponse(w, r, http.StatusInternalServerError, "failed", err.Error())
+	}
+	helpers.CustomResponse(w, r, http.StatusOK, "success", res)
 }

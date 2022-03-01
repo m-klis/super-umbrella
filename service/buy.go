@@ -8,6 +8,7 @@ import (
 type BuyService interface {
 	GetAllBuys() ([]*models.BuyResponse, error)
 	CreateBuy(*models.Transaction) (*models.Transaction, error)
+	CreateTransaction(*models.Transaction) (*models.Transaction, error)
 }
 
 type buyService struct {
@@ -30,6 +31,14 @@ func (bs *buyService) GetAllBuys() ([]*models.BuyResponse, error) {
 
 func (bs *buyService) CreateBuy(t *models.Transaction) (*models.Transaction, error) {
 	mt, err := bs.buyRepo.CreateBuy(t)
+	if err != nil {
+		return nil, err
+	}
+	return mt, nil
+}
+
+func (bs *buyService) CreateTransaction(t *models.Transaction) (*models.Transaction, error) {
+	mt, err := bs.buyRepo.CreateTransaction(t)
 	if err != nil {
 		return nil, err
 	}

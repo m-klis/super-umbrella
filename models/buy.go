@@ -36,9 +36,10 @@ type Transaction struct {
 	ID        int       `json:"id"`
 	UserId    int       `json:"user_id"`
 	ItemId    int       `json:"item_id"`
-	Price     float64   `json:"price"`
+	Amount    float64   `json:"amount"`
 	CreatedAt time.Time `json:"created_at"`
 	Uuid      string    `json:"uuid"`
+	ItemQty   int       `json:"item_qty"`
 }
 
 type DataBuy struct {

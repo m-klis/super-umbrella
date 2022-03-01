@@ -9,6 +9,7 @@ import (
 type BuyRepository interface {
 	GetAllBuys() ([]*models.BuyResponse, error)
 	CreateBuy(*models.Transaction) (*models.Transaction, error)
+	CreateTransaction(*models.Transaction) (*models.Transaction, error)
 }
 
 type buyRepository struct {
@@ -26,7 +27,18 @@ func (ur *buyRepository) GetAllBuys() ([]*models.BuyResponse, error) {
 }
 
 func (ur *buyRepository) CreateBuy(t *models.Transaction) (*models.Transaction, error) {
-	query := ur.db.Debug()
+	query := ur.db
+
+	err := query.Create(&t).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return t, nil
+}
+
+func (ur *buyRepository) CreateTransaction(t *models.Transaction) (*models.Transaction, error) {
+	query := ur.db
 
 	err := query.Create(&t).Error
 	if err != nil {
