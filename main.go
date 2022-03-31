@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"gochicoba/consumer"
 	"gochicoba/db"
 	"gochicoba/handler"
 	"log"
@@ -27,6 +28,8 @@ func init() {
 
 func main() {
 	database := db.DatabaseInitialize()
+	amqp := consumer.InitializeMessageBroker()
+
 	addr := os.Getenv("APP_PORT")
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%s", addr),
@@ -36,8 +39,11 @@ func main() {
 	go func() {
 		server.ListenAndServe()
 	}()
-
 	defer Stop(server)
+
+	go handler.BuyBrokerListener(database, amqp)
+	defer consumer.CloseMessageBroker(amqp)
+
 	log.Printf("Started server on : %s", addr)
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)

@@ -47,3 +47,11 @@ func (ur *buyRepository) CreateTransaction(t *models.Transaction) (*models.Trans
 
 	return t, nil
 }
+
+func CreateTransactionBroker(db *gorm.DB, t *models.Transaction) error {
+	err := db.Create(&t).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
